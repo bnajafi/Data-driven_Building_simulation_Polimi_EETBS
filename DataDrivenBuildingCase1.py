@@ -1,36 +1,12 @@
 # -*- coding: utf-8 -*-
 
 
-
-# # This notebook is a simple demonstration on how to load a time series data from a file, plot it and explore its properties.
-# ## For any data-driven modeling, we may have to compare 2 or more dataset and find the similarities or correlation between them, if they have any.
-# ## So, here we have 3 time series data set.
-
-
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 #import seaborn as sns
 
 
-# #### Here i store some local folder paths in variables, so that i dont have to type out a long file location in my code.
-
-
-#consumption_path = 'C:/Users/MANOJ/ML_SmartMeterAnalytics/data/consumption/'
-#data_path = 'C:/Users/MANOJ/ML_SmartMeterAnalytics/data/'
-#weather_path = 'C:/Users/MANOJ/ML_SmartMeterAnalytics/data/weather/'
-
-
-# #### H5 or HDF5 (Hierarchical Data Format) is a type for format for storing and managing data. Python Pandas can read such a file using the code below
-
-# In[47]:
-"""
-combined = pd.HDFStore(join(consumption_path,'5545_AC.h5'))
-#key = combined.keys()[0].replace('/','')
-key = '5545'
-dataframe = combined.get(key)
-combined.close()
-"""
 DataFolderPath="C:/Users/behzad/Dropbox/_2_Teaching Activities/_0_EETBS- On-going/Datadriven building Lessons/Files to GIT/Data"
 ConsumptionFileName = "consumption_5545.csv"
 ConsumptionFilePath= DataFolderPath+"/"+ConsumptionFileName
