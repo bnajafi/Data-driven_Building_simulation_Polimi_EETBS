@@ -59,4 +59,11 @@ DF_joined = DF_consumption.join([DF_temperature,DF_irradiance])
 DF_joined.head(24)
 
 # what to do with Nans 
-DF_joined.dropna() #it will remove all Nans !!!!! 
+DF_joined_cleaned = DF_joined.dropna() #it will remove all Nans !!!!! 
+
+temp_max=DF_joined_cleaned["temperature"].max()
+temp_min = DF_joined_cleaned["temperature"].min()
+
+DF_joined_cleaned["temperature normalized"] = (DF_joined_cleaned["temperature"]-temp_min)/(temp_max-temp_min)
+
+DF_joined_cleaned["temperature normalized"].plot()
