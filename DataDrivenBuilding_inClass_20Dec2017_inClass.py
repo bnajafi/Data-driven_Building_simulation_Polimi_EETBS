@@ -206,6 +206,4 @@ DF_FinalDataSet['weekend'] = [weekendDetector(thisDay) for thisDay in DF_FinalDa
 DF_FinalDataSet['day_night'] = [dayDetector(thisHour) for thisHour in DF_FinalDataSet.index.hour ]
 DF_FinalDataSet.head()
 
-DF_target = DF_FinalDataSet["air conditioner_5545"]
-DF_features = DF_FinalDataSet.drop("air conditioner_5545",axis=1)
 
