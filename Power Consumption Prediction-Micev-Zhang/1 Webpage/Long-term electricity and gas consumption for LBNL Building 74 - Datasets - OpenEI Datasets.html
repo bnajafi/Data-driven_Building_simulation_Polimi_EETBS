@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<!-- saved from url=(0052)https://openei.org/datasets/dataset/lbnl-building-74 -->
+<html lang="en" class=" js"><!--<![endif]--><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!--[if lte ie 8]><script type="text/javascript" src="/datasets/fanstatic/vendor/:version:2014-05-01T14:42:54.75/html5.min.js"></script><![endif]-->
+<link rel="stylesheet" type="text/css" href="https://openei.org/datasets/fanstatic/vendor/:version:2014-05-01T14:42:54.75/select2/select2.css">
+<link rel="stylesheet" type="text/css" href="https://openei.org/datasets/fanstatic/css/:version:2014-09-11T20:21:10.92/main.min.css">
+<link rel="stylesheet" type="text/css" href="https://openei.org/datasets/fanstatic/vendor/:version:2014-05-01T14:42:54.75/font-awesome/css/font-awesome.min.css">
+<!--[if ie 7]><link rel="stylesheet" type="text/css" href="/datasets/fanstatic/vendor/:version:2014-05-01T14:42:54.75/font-awesome/css/font-awesome-ie7.min.css" /><![endif]-->
+<link rel="stylesheet" type="text/css" href="https://openei.org/datasets/fanstatic/ckanext-harvest/:version:2014-07-29T20:59:19.43/styles/harvest.css">
+<link rel="stylesheet" type="text/css" href="https://openei.org/datasets/fanstatic/ckanext-openeitheme/:version:2015-04-23T00:20:13.66/css/package_read.css">
+
+    
+  
+      <meta name="generator" content="ckan 2.2">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Long-term electricity and gas consumption for LBNL Building 74 - Datasets - OpenEI Datasets</title>
+
+    
+    
+  <link rel="shortcut icon" href="https://openei.org/images/icons/openei.ico">
+    
+  
+    
+<!-- Snippet googleanalytics/snippets/googleanalytics_header.html start -->
+<script type="text/javascript" async="" src="https://ssl.google-analytics.com/ga.js"></script><script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-9266690-2']);
+  _gaq.push(['_setDomainName', 'auto']);
+  _gaq.push(['_trackPageview']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+<!-- Snippet googleanalytics/snippets/googleanalytics_header.html end -->
+
+  
+
+  <link rel="alternate" type="application/rdf+xml" href="https://openei.org/datasets/dataset/399852d9-91a3-4dd7-86ba-73dd5388c994.rdf">
+
+  
+  
+      
+    
+  
+
+  <link rel="stylesheet" href="https://openei.org/datasets/css/bootstrap-responsive.min.css">
+  <link rel="stylesheet" href="https://openei.org/datasets/css/ckan_theme.css">
+
+
+    
+      
+      
+    
+  
+  <meta property="og:title" content="Long-term electricity and gas consumption for LBNL Building 74 - OpenEI Datasets">
+  <meta property="og:description" content="15 minute electricity and 5 minute natural gas consumption data for Building 74 on the Lawrence Berkeley National Lab campus.
+">
+
+    
+  <style id="style-1-cropbar-clipper">/* Copyright 2014 Evernote Corporation. All rights reserved. */
+.en-markup-crop-options {
+    top: 18px !important;
+    left: 50% !important;
+    margin-left: -100px !important;
+    width: 200px !important;
+    border: 2px rgba(255,255,255,.38) solid !important;
+    border-radius: 4px !important;
+}
+
+.en-markup-crop-options div div:first-of-type {
+    margin-left: 0px !important;
+}
+</style></head>
+
+  
+  <body data-site-root="https://openei.org/datasets/" data-locale-root="https://openei.org/datasets/">
+
+    
+    
+<header>
+<div class="header">
+  <div class="menu">
+    <div id="topnavcontainer">
+      <a title="Open Energy Information" onclick="pageTracker._trackEvent(&#39;Header&#39;, &#39;Click&#39;, &#39;Logo&#39;);" href="https://openei.org/wiki/Main_Page">
+        <object alt="OpenEI: Energy Information" height="52" width="165" type="image/svg+xml" data="https://openei.org/w/skins/OpenEI/images/openei_logo.svg" style="pointer-events: none; float: left; padding-left: 5px;"></object>
+      </a>
+      <ul id="topnav">
+<li class="first level1" id="wiki_level1"><div><a class="level1" href="https://openei.org/wiki">Wiki</a></div>
+</li>
+<li class="level1" id="apps_level1"><div><a class="level1" href="https://openei.org/apps">Apps</a></div>
+</li>
+<li class="level1" id="datasets_level1"><div class="active"><a class="level1" href="https://openei.org/datasets/dataset">Datasets</a></div>
+<ul class="sf-menu" style="clear: left">
+<li class="level2"><a class="level2" href="https://openei.org/datasets/dataset">Find data</a></li>
+<li class="level2"><a class="level2" href="https://openei.org/datasets/upload/">Add data</a></li>
+<li class="level2"><a class="level2" href="https://openei.org/datasets/about">About CKAN</a></li>
+</ul>
+</li>
+<!--li class="level1" id="community_level1"><div><a class="level1" href="/community">Community</a></div>
+</li-->
+      </ul> <!-- end #topnav -->
+      <div class="rightside right" id="header-login">
+
+        <span class="login">
+            <a href="https://auth.openei.org/cas/login?redir=https://openei.org/datasets/dataset/lbnl-building-74">Login</a>
+            |
+            <a href="https://auth.openei.org/cas/register?redir=https://openei.org/datasets/dataset/lbnl-building-74" onclick="pageTracker._trackEvent(&#39;Header&#39;, &#39;Click&#39;, &#39;Sign Up&#39;);" class="signup">Sign Up</a>
+	    </span>
+
+	<div class="clear"></div>
+      </div>
+      <div id="searchBody" class="search right">
+	<form action="https://openei.org/search/" method="get" name="openei-search" class="openei-search">
+	  <input type="text" maxlength="128" size="20" name="q" x-webkit-speech="" class="component-openei-search-query ui-autocomplete-input left ui-corner-all field">
+	  <button type="submit" onclick="pageTracker._trackEvent(&#39;Header&#39;, &#39;Click&#39;, &#39;Search Fulltext&#39;);" class="component-openei-search-button searchButton fg-button ui-widget ui-state-default ui-corner-all left ui-state" value="Search" title="Search all OpenEI content for this text">
+	    Search
+	  </button>
+	</form>
+      </div> <!-- end #searchBody -->
+    </div> <!-- end #topnavcontainer -->
+  </div> <!-- end .menu -->
+  <div class="toolbar">
+    <div class="toolbar-margin">
+    </div>
+  </div> <!-- end .toolbar -->
+</div> <!-- end .header -->
+</header>
+
+  
+    <div role="main">
+      <div id="content" class="container">
+        
+  
+          
+            
+            <div class="flash-messages">
+              
+            </div>
+          
+
+          
+            <div class="toolbar">
+              
+            </div>
+          
+
+          <div class="wrapper">
+
+            
+            
+            
+
+            
+              <div class="primary">
+                
+                
+                  <article class="module">
+                    
+                      <header class="module-content page-header">
+                        
+                        <ul class="nav nav-tabs">
+                          
+  <li class="active"><a href="https://openei.org/datasets/dataset/lbnl-building-74">Dataset</a></li>
+  
+  <li><a href="https://openei.org/datasets/dataset/activity/lbnl-building-74"><i class="icon-time"></i> Activity Stream</a></li>
+  
+
+                        </ul>
+                      </header>
+                    
+                    <div class="module-content">
+                      
+                      
+  
+  
+    
+      
+    
+
+  
+  
+    
+    <h1>
+      
+        Long-term electricity and gas consumption for LBNL Building 74
+        
+      
+    </h1>
+    
+      
+        <div class="notes embedded-content">
+          <p>15 minute electricity and 5 minute natural gas consumption data for Building 74 on the Lawrence Berkeley National Lab campus.
+</p>
+        </div>
+      
+    
+    
+    <span class="insert-comment-thread"></span>
+  
+  
+
+
+  
+    
+<!-- Snippet package/snippets/resources_list.html start -->
+
+<section id="dataset-resources" class="resources">
+  <h3>Data and Resources</h3>
+  
+    
+      <ul class="resource-list">
+        
+          
+            
+<!-- Snippet package/snippets/resource_item.html start -->
+
+
+
+
+<li class="resource-item" data-id="c0608a74-1ef8-4583-a4cd-33f0c78e8478">
+  
+  <a class="heading" href="https://openei.org/datasets/dataset/lbnl-building-74/resource/c0608a74-1ef8-4583-a4cd-33f0c78e8478" title="Electricity Consumption">
+    Electricity Consumption<span class="format-label" property="dc:format" data-format="xlsx">xlsx</span>
+    
+<!-- Snippet snippets/popular.html start -->
+
+
+<!-- Snippet snippets/popular.html end -->
+
+  </a>
+  
+  <p class="description">
+    
+      15 minute electricity consumption data.
+
+    
+  </p>
+  
+  
+    
+      <div class="resource-item-actions">  
+        <a href="https://openei.org/datasets/dataset/lbnl-building-74/resource/c0608a74-1ef8-4583-a4cd-33f0c78e8478">
+          
+            <i class="icon-info-sign"></i>
+            More info
+          
+        </a>
+        <a href="http://en.openei.org/datasets/dataset/399852d9-91a3-4dd7-86ba-73dd5388c994/resource/c0608a74-1ef8-4583-a4cd-33f0c78e8478/download/lbnlb74electricity.xlsx" class="primary-action resource-url-analytics" target="_blank">
+          
+            <i class="icon-download"></i>
+            Download
+          
+        </a>
+      </div>
+    
+  
+  
+
+</li>
+<!-- Snippet package/snippets/resource_item.html end -->
+
+          
+            
+<!-- Snippet package/snippets/resource_item.html start -->
+
+
+
+
+<li class="resource-item" data-id="2691a1c1-ff6d-48b1-afc7-e8fec50ff0a8">
+  
+  <a class="heading" href="https://openei.org/datasets/dataset/lbnl-building-74/resource/2691a1c1-ff6d-48b1-afc7-e8fec50ff0a8" title="Gas Consumption">
+    Gas Consumption<span class="format-label" property="dc:format" data-format="xlsx">xlsx</span>
+    
+<!-- Snippet snippets/popular.html start -->
+
+
+<!-- Snippet snippets/popular.html end -->
+
+  </a>
+  
+  <p class="description">
+    
+      5 minute gas consumption data.
+
+    
+  </p>
+  
+  
+    
+      <div class="resource-item-actions">  
+        <a href="https://openei.org/datasets/dataset/lbnl-building-74/resource/2691a1c1-ff6d-48b1-afc7-e8fec50ff0a8">
+          
+            <i class="icon-info-sign"></i>
+            More info
+          
+        </a>
+        <a href="http://en.openei.org/datasets/dataset/399852d9-91a3-4dd7-86ba-73dd5388c994/resource/2691a1c1-ff6d-48b1-afc7-e8fec50ff0a8/download/lbnlbuilding74gasdata.xlsx" class="primary-action resource-url-analytics" target="_blank">
+          
+            <i class="icon-download"></i>
+            Download
+          
+        </a>
+      </div>
+    
+  
+  
+
+</li>
+<!-- Snippet package/snippets/resource_item.html end -->
+
+          
+        
+      </ul>
+    
+    
+</section>
+<!-- Snippet package/snippets/resources_list.html end -->
+
+  
+
+  
+    
+<!-- Snippet package/snippets/tags.html start -->
+
+  <section class="tags">
+    
+<!-- Snippet snippets/tag_list.html start -->
+
+
+<ul class="tag-list well">
+  
+    <li>
+      <a class="tag" href="https://openei.org/datasets/dataset?tags=Buildings">Buildings</a>
+    </li>
+  
+    <li>
+      <a class="tag" href="https://openei.org/datasets/dataset?tags=Energy">Energy</a>
+    </li>
+  
+</ul>
+<!-- Snippet snippets/tag_list.html end -->
+
+  </section>
+
+<!-- Snippet package/snippets/tags.html end -->
+
+  
+
+  
+    
+<!-- Snippet package/snippets/additional_info.html start -->
+<section class="additional-info">
+  <h3>Additional Info</h3>
+  <table class="table table-striped table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th scope="col">Field</th>
+        <th scope="col">Value</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+        
+
+        
+
+        
+
+        
+
+        
+
+      
+  
+    
+    <tr rel="dc:relation" resource="_:extra">
+      <th scope="row" class="dataset-label" property="rdfs:label">Catalog</th>
+      <td class="dataset-details" property="rdf:value">OpenEI</td>
+    </tr>
+  
+    
+    <tr rel="dc:relation" resource="_:extra">
+      <th scope="row" class="dataset-label" property="rdfs:label">Required Software</th>
+      <td class="dataset-details" property="rdf:value"></td>
+    </tr>
+  
+    
+    <tr rel="dc:relation" resource="_:extra">
+      <th scope="row" class="dataset-label" property="rdfs:label">Sectors</th>
+      <td class="dataset-details" property="rdf:value">Buildings</td>
+    </tr>
+  
+
+
+      
+    </tbody>
+  </table>
+</section>
+<!-- Snippet package/snippets/additional_info.html end -->
+
+  
+
+
+
+  
+  
+  
+  
+  <script type="text/javascript">
+    
+    var pkg_relationships = [
+    
+    ];
+    var rel_map = {'depends_on':'Depends On',
+                   'dependency_of':'Dependency Of',
+                   'derives_from':'Derives From',
+                   'has_derivation':'Has Derivation',
+                   'links_to':'Links To',
+                   'linked_from':'Linked From',
+                   'child_of':'Child Of',
+                   'parent_of':'Parent Of'};
+    var pkg_rel_writer = false;
+    
+  </script>
+  <section id="pkg_rel_table">
+    <h3>Package Relationships</h3>
+    <table class="table table-striped table-bordered table-condensed">
+      <thead>
+        <tr>
+          
+          <th scope="col" class="pkg_rel_rel_cell">Relationship</th>
+          <th scope="col" class="pkg_rel_dataset_cell">Dataset</th>
+          
+        </tr>
+      </thead>
+      <tbody id="pkg_rel_body"></tbody>
+    </table>
+  </section>
+
+  
+  
+
+                    </div>
+                  </article>
+                
+              </div>
+            
+
+            
+              <aside class="secondary">
+                
+                
+  
+  
+  
+  
+    
+<!-- Snippet snippets/license.html start -->
+
+  
+    <section class="module module-narrow module-shallow license">
+    <h2 class="module-heading"><i class="icon-medium icon-lock"></i> License</h2>
+      <p class="module-content">
+  
+  
+    <span property="dc:rights">License Not Specified</span>
+  
+  
+    
+      </p>
+    </section>
+  
+
+<!-- Snippet snippets/license.html end -->
+
+  
+
+  
+  
+  
+  
+  
+    
+<!-- Snippet snippets/social.html start -->
+
+
+<section class="module module-narrow social">
+<h2 class="module-heading muted"><i class="icon-medium icon-share"></i> Share on Social Sites</h2>
+  <ul class="nav nav-simple">
+    <li class="nav-item"><a href="https://plus.google.com/share?url=https://openei.org/datasets/dataset/lbnl-building-74" target="_blank"><i class="icon-google-plus-sign"></i> Google+</a></li>
+    <li class="nav-item"><a href="https://twitter.com/share?url=https://openei.org/datasets/dataset/lbnl-building-74" target="_blank"><i class="icon-twitter-sign"></i> Twitter</a></li>
+    <li class="nav-item"><a href="https://www.facebook.com/sharer.php?u=https://openei.org/datasets/dataset/lbnl-building-74" target="_blank"><i class="icon-facebook-sign"></i> Facebook</a></li>
+  </ul>
+</section>
+<!-- Snippet snippets/social.html end -->
+
+  
+  
+  
+  
+  
+  
+  
+    
+      
+<!-- Snippet package/snippets/package_organization.html start -->
+
+
+
+
+
+  <section class="module module-narrow module-shallow context-info">
+    
+    <h2 class="module-heading">
+      <i class="icon-medium icon-book"></i> Collection
+    </h2>
+    <div class="module-content">
+      <a href="https://openei.org/datasets/organization/doe" class="org-link">U.S. Department of Energy (DOE)</a>
+    </div>
+  </section>
+
+<!-- Snippet package/snippets/package_organization.html end -->
+
+    
+  
+  
+  
+
+
+              </aside>
+            
+          </div>
+        
+<!-- Begin ESI footer -->
+<div class="footer clear" id="footer">
+  <div class="footer-about">
+    <ul>
+      <li><a href="https://openei.org/wiki/OpenEI:About" title="More about OpenEI">About us</a></li>
+      <li><a href="https://openei.org/wiki/OpenEI:General_disclaimer" title="OpenEI disclaimers">Disclaimers</a></li>
+      <li><a href="https://openei.org/community/content/energy-blogs">Energy blogs</a></li>
+      <li><a href="https://openei.org/lod">Linked Data</a></li>
+      <li><a href="https://openei.org/services">Developer services</a></li>
+    </ul>
+  </div>
+  <div class="credits fineprint">
+    OpenEI partners with a broad range of <a href="https://openei.org/wiki/OpenEI_International_Sponsors_and_Partners">international organizations</a> to grow its content, data and service offerings.
+  </div>
+</div>
+<!-- End ESI footer --> 
+
+
+      </div>
+    </div>
+  
+    
+
+
+
+  
+    
+    
+    
+  
+  
+    
+  
+    
+    <div class="js-hide" data-module="google-analytics" data-module-googleanalytics_resource_prefix="">
+    </div>
+  
+
+
+      
+  <script>document.getElementsByTagName('html')[0].className += ' js';</script>
+<script type="text/javascript" src="https://openei.org/datasets/fanstatic/vendor/:version:2014-05-01T14:42:54.75/jquery.min.js"></script>
+<script type="text/javascript" src="https://openei.org/datasets/fanstatic/vendor/:version:2014-05-01T14:42:54.75/:bundle:bootstrap/js/bootstrap.min.js;jed.min.js;select2/select2.min.js"></script>
+<script type="text/javascript" src="https://openei.org/datasets/fanstatic/base/:version:2014-05-01T18:22:53.84/:bundle:plugins/jquery.inherit.min.js;plugins/jquery.proxy-all.min.js;plugins/jquery.url-helpers.min.js;plugins/jquery.date-helpers.min.js;plugins/jquery.slug.min.js;plugins/jquery.slug-preview.min.js;plugins/jquery.truncator.min.js;plugins/jquery.masonry.min.js;plugins/jquery.form-warning.min.js;sandbox.min.js;module.min.js;pubsub.min.js;client.min.js;notify.min.js;i18n.min.js;main.min.js;modules/select-switch.min.js;modules/slug-preview.min.js;modules/basic-form.min.js;modules/confirm-action.min.js;modules/api-info.min.js;modules/autocomplete.min.js;modules/custom-fields.min.js;modules/related-item.min.js;modules/data-viewer.min.js;modules/table-selectable-rows.min.js;modules/resource-form.min.js;modules/resource-upload-field.min.js;modules/resource-reorder.min.js;modules/follow.min.js;modules/activity-stream.min.js;modules/dashboard.min.js;modules/table-toggle-more.min.js;modules/dataset-visibility.min.js;modules/media-grid.min.js;modules/image-upload.min.js"></script>
+<script type="text/javascript" src="https://openei.org/datasets/fanstatic/ckanext-googleanalytics/:version:2014-07-16T21:42:09.70/googleanalytics_event_tracking.js"></script>
+<script type="text/javascript" src="https://openei.org/datasets/fanstatic/ckanext-openeitheme/:version:2015-04-23T00:20:13.66/js/package_read.js"></script>
+</body></html>
