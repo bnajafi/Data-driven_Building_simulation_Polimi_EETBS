@@ -72,15 +72,11 @@ exampleBuilding = "Office_Ellie"
 Series_metaData_exampleBuilding = DF_metaData_transposed[exampleBuilding]
 # so we can see its date Start Date End , time zone, surface , industry, subindustry etc. and the corresponding weather file
 # Now let's see how we can use the metadata information to extract the related data of this building from the temporalData dataframe
+# first let's extract the time zone, measurement start and end date of the building from the corresponding metaData serie
 
-DF_meta_transposed = DF_metaData.T # here we just have a transposed format of the meta dataset
-DF_meta_transposed.head()
-DF_meta_trasposed_exampleBuilding = DF_meta_transposed[exampleBuilding]
-
-
-exampleBuilding_startDate = DF_meta_trasposed_exampleBuilding.datastart
-exampleBuilding_EndDate = DF_meta_trasposed_exampleBuilding.dataend
-exampleBuilding_timeZone = DF_meta_trasposed_exampleBuilding.timezone
+exampleBuilding_startDate = Series_metaData_exampleBuilding["datastart"]
+exampleBuilding_EndDate = Series_metaData_exampleBuilding["dataend"]
+exampleBuilding_timeZone = Series_metaData_exampleBuilding["timezone"]
 
 DF_temp_exampleBuilding  = DF_temp[exampleBuilding]
 DF_temp_exampleBuilding.head()
