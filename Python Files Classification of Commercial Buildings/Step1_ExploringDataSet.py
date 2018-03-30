@@ -22,7 +22,7 @@ dataSetFileName = "temp_open_utc.csv"
 metaDataFileName = "meta_open.csv"
 
 # Now I simply add this to the main folder so that I would create the path to the temp and meta files, I would use os.path.join to do so
-path_temp= os.path.join(Genomic_DataSet_directory,dataSetFileName)
+path_temporalData= os.path.join(Genomic_DataSet_directory,dataSetFileName)
 path_metaData =  os.path.join(Genomic_DataSet_directory,metaDataFileName)
 
 """ Note on creating the path to the file! 
@@ -32,7 +32,7 @@ path_metaData = Genomic_DataSet_directory
 The problem is that this will only work on Windows and not on a Mac, os.path.join handles this problem 
 """
 # now let's use Pandas read_csv the import the temperalData and MetaData datasets as Pandas dataframes
-DF_temporalData = pd.read_csv(path_temp,index_col="timestamp", parse_dates=True).tz_localize("utc")
+DF_temporalData = pd.read_csv(path_temporalData,index_col="timestamp", parse_dates=True).tz_localize("utc")
 # pay attention that usling index_col argument we impose the "timestamp" column as the index and we ask pandas to parse its dates as timestamps
 # using tz_localize, we are imposing the time zone to be the Coordinated Universal Time (UTC)
 
@@ -68,37 +68,60 @@ DF_metaData_transposed = DF_metaData.T
 DF_metaData_transposed.head(19) # this simply shows the first 18 rows
 # so in the meta data trasnpsed DataFrame we have 18 rows each of which represents a property and each of the 507 columns instead corresponds to one building
 # So imagine that we would choose "office_Ellie" as an example building, all the properties of this example building can be found as:
-exampleBuilding = "Office_Ellie"
-Series_metaData_exampleBuilding = DF_metaData_transposed[exampleBuilding]
+chosenBuilding = "Office_Ellie"
+Series_metaData_chosenBuilding = DF_metaData_transposed[chosenBuilding]
 # so we can see its date Start Date End , time zone, surface , industry, subindustry etc. and the corresponding weather file
 # Now let's see how we can use the metadata information to extract the related data of this building from the temporalData dataframe
 # first let's extract the time zone, measurement start and end date of the building from the corresponding metaData serie
 
-exampleBuilding_startDate = Series_metaData_exampleBuilding["datastart"]
-exampleBuilding_EndDate = Series_metaData_exampleBuilding["dataend"]
-exampleBuilding_timeZone = Series_metaData_exampleBuilding["timezone"]
+startDate_chosenBuilding = Series_metaData_chosenBuilding["datastart"]
+endDate_chosenBuilding = Series_metaData_chosenBuilding["dataend"]
+timeZone_chosenBuilding = Series_metaData_chosenBuilding["timezone"]
 
-DF_temp_exampleBuilding  = DF_temp[exampleBuilding]
-DF_temp_exampleBuilding.head()
-DF_temp_exampleBuilding_timeZoned =DF_temp_exampleBuilding.tz_convert(exampleBuilding_timeZone)
-DF_temp_exampleBuilding_inMeasuredDuration = DF_temp_exampleBuilding_timeZoned.truncate(before=exampleBuilding_startDate,after=exampleBuilding_EndDate)
-#Next function read the data of an indvidual building
-DF_temp_exampleBuilding_inMeasuredDuration.head()
+# Now let's go back to our temporalData dataframe and extract the whole column that corresponds to our example building
+Series_temporalData_chosenBuilding  = DF_temporalData[chosenBuilding]
+Series_temporalData_chosenBuilding.head()
+# but if we would have a look on the head we can see that for the indexes there is +00:00  which indicates that time zone is UTC
+# though we now that time zone of our example building  is  America/Los_Angeles
+print timeZone_chosenBuilding
+# So we will need to convert the timezone of it using tz_convert
 
-def get_individual_data(temp, meta, building):
-    timezone = meta.T[building].timezone # it is simply first transposing the meta dataset so that the buildings would be columns and propertes would be indexes, next it find the time zone based on that
-    start = meta.T[building].datastart # using the transposed meta data it is finding the measurment start date for a building
-    end = meta.T[building].dataend# using the transposed meta data it is finding the measurment end date for a building
-    # Next we convert the data of each building into its timezone (tz_convert
-    #and then we truncate this Series between the start and end dates of its measurment
-    return pd.DataFrame(temp[building].tz_convert(timezone).truncate(before=start,after=end)) 
+Series_temporalData_chosenBuilding_timeZoneConverted =  Series_temporalData_chosenBuilding.tz_convert(timeZone_chosenBuilding)
+# now if we would print the head of this Series :
+Series_temporalData_chosenBuilding_timeZoneConverted.head()
+# We can see that the time zone has changed and -8:00 shows that timezone of this dataset is 8 hours bheind UTC.
+# but still we can observe that the for the first rows the consumption value is NaN which is due to the fact that in 2010 the measurments were not started
+# so we need to limit the rows to the ones between the start and the end date corresponding to this dataset. To do so, we can use the truncate method which simply
+# truncates the rows before a certain date and after a certain date.
+measuredData_chosenBuilding =  Series_temporalData_chosenBuilding_timeZoneConverted.truncate(before=startDate_chosenBuilding,after=endDate_chosenBuilding)
+measuredData_chosenBuilding.head(24)
+# We can see that the values are not NaN anymore.
+print "Measurement of this building started on "+startDate_chosenBuilding.strftime('%Y-%m-%d') + " and ended on "+endDate_chosenBuilding
+# Clearly this procedure can be similarly repeated for all buildings so let's write a function that performs the same procedure !
+
+def extract_building_data(DF_temporalData, DF_metaData, chosenBuilding, printBuildingInformation = False):
+    DF_metaData_transposed = DF_metaData.T
+    Series_metaData_chosenBuilding = DF_metaData_transposed[chosenBuilding]
+    startDate_chosenBuilding = Series_metaData_chosenBuilding["datastart"]
+    endDate_chosenBuilding = Series_metaData_chosenBuilding["dataend"]
+    timeZone_chosenBuilding = Series_metaData_chosenBuilding["timezone"]
+    Series_temporalData_chosenBuilding  = DF_temporalData[chosenBuilding]
+    Series_temporalData_chosenBuilding_timeZoneConverted =  Series_temporalData_chosenBuilding.tz_convert(timeZone_chosenBuilding)
+    measuredData_chosenBuilding = Series_temporalData_chosenBuilding_timeZoneConverted.truncate(before=startDate_chosenBuilding,after=endDate_chosenBuilding)
+    if printBuildingInformation==True:
+        print "The name of chosen building is "+ chosenBuilding+  "  it's timezone is "+timeZone_chosenBuilding 
+        print "Measurement of this building started on "+startDate_chosenBuilding.strftime('%Y-%m-%d') + " and ended on "+endDate_chosenBuilding.strftime('%Y-%m-%d')
+    return measuredData_chosenBuilding
+
+# So let's use this created function to find the data of our example building    
+# the function strftime only converts the pandas timestamp to a formated  string ( whic is given to be year month day in our case '%Y-%m-%d'
+    
+ExtractedData_chosenBuilding  = extract_building_data(DF_temporalData,DF_metaData, "Office_Ellie", printBuildingInformation=True)
+ExtractedData_chosenBuilding.head(24)
+
 
 # Let's see an example of extracting the data corresponding to an individual building:
 
-exampleBuilding = "Office_Ellie"
-
-DF_Office_Ellie = get_individual_data(DF_temp,DF_meta,exampleBuilding)
-DF_Office_Ellie.head()
 
 # Now let's extract the data for the period of '2012-12-15' till '2012-12-30'
 period_start = '2012-12-15'
