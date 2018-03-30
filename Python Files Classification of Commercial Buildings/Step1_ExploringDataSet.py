@@ -1,11 +1,7 @@
-import pandas as pd
-import seaborn as sns
-import numpy as np
-import matplotlib.pyplot as plt
-from datetime import datetime
-import matplotlib
 import getpass
 import os
+import pandas as pd
+import matplotlib.pyplot as plt
 
 # First let's create the path to the files
 
@@ -96,10 +92,10 @@ Series_temporalData_chosenBuilding_timeZoneConverted.head()
 measuredData_chosenBuilding =  Series_temporalData_chosenBuilding_timeZoneConverted.truncate(before=startDate_chosenBuilding,after=endDate_chosenBuilding)
 measuredData_chosenBuilding.head(24)
 # We can see that the values are not NaN anymore.
-print "Measurement of this building started on "+startDate_chosenBuilding.strftime('%Y-%m-%d') + " and ended on "+endDate_chosenBuilding
+print "Measurement of this building started on "+startDate_chosenBuilding.strftime('%Y-%m-%d') + " and ended on "+endDate_chosenBuilding.strftime('%Y-%m-%d') 
 # Clearly this procedure can be similarly repeated for all buildings so let's write a function that performs the same procedure !
 
-def extract_building_data(DF_temporalData, DF_metaData, chosenBuilding, printBuildingInformation = False):
+def extract_building_data(DF_temporalData, DF_metaData, chosenBuilding):
     DF_metaData_transposed = DF_metaData.T
     Series_metaData_chosenBuilding = DF_metaData_transposed[chosenBuilding]
     startDate_chosenBuilding = Series_metaData_chosenBuilding["datastart"]
@@ -108,79 +104,42 @@ def extract_building_data(DF_temporalData, DF_metaData, chosenBuilding, printBui
     Series_temporalData_chosenBuilding  = DF_temporalData[chosenBuilding]
     Series_temporalData_chosenBuilding_timeZoneConverted =  Series_temporalData_chosenBuilding.tz_convert(timeZone_chosenBuilding)
     measuredData_chosenBuilding = Series_temporalData_chosenBuilding_timeZoneConverted.truncate(before=startDate_chosenBuilding,after=endDate_chosenBuilding)
-    if printBuildingInformation==True:
-        print "The name of chosen building is "+ chosenBuilding+  "  it's timezone is "+timeZone_chosenBuilding 
-        print "Measurement of this building started on "+startDate_chosenBuilding.strftime('%Y-%m-%d') + " and ended on "+endDate_chosenBuilding.strftime('%Y-%m-%d')
     return measuredData_chosenBuilding
 
 # So let's use this created function to find the data of our example building    
-# the function strftime only converts the pandas timestamp to a formated  string ( whic is given to be year month day in our case '%Y-%m-%d'
-    
-ExtractedData_chosenBuilding  = extract_building_data(DF_temporalData,DF_metaData, "Office_Ellie", printBuildingInformation=True)
+
+ExtractedData_chosenBuilding  = extract_building_data(DF_temporalData,DF_metaData, "Office_Ellie")
 ExtractedData_chosenBuilding.head(24)
 
 
 # Let's see an example of extracting the data corresponding to an individual building:
+# Let's visualise this for a shorter period for example 1st of July 2012 till the end of July 2012
 
-
-# Now let's extract the data for the period of '2012-12-15' till '2012-12-30'
-period_start = '2012-12-15'
-period_end = '2012-12-30'
-DF_Office_Ellie_period = DF_Office_Ellie.truncate(before=period_start,after=period_end)
-DF_Office_Ellie_period.head()    
+period_start = '2012-07-1'
+period_end = '2012-07-15'
+ExtractedData_chosenBuilding_chosenPeriod = ExtractedData_chosenBuilding[period_start:period_end]
+ExtractedData_chosenBuilding_chosenPeriod.head()
+ExtractedData_chosenBuilding_chosenPeriod.tail()
 
 
 # Let's visualise it
-fig=  plt.figure()
-ax = fig.add_axes()
+fig1=  plt.figure()
+ax = fig1.add_axes()
 
-ax = DF_Office_Ellie_period.plot()
+ax = ExtractedData_chosenBuilding_chosenPeriod.plot()
 ax.set_xlabel("Time")
-ax.set_ylabel("Consumption (kWh) of "+exampleBuilding)
-ax.set_title("Consumption of "+exampleBuilding)
+ax.set_ylabel("Consumption (kWh) of "+chosenBuilding)
+ax.set_title("Consumption of "+chosenBuilding)
 # Next, we create a dataSet similar to the original temp with the only difference that the consumption of each timestamp of each building
 # is divided by its surface (sqm)
-DF_temp_hourly = DF_temp.resample('H').sum() # this is simply resampling data to be hourly and it is summing up everything in between
-DF_temp_normalized = DF_temp_hourly/DF_meta["sqm"] # it is dividing the column of each building by its corresponding sqm
+# Now let's resample this data as daily and plot it for the whole period it is measured.
 
+ExtractedData_chosenBuilding_daily = ExtractedData_chosenBuilding.resample("D").sum()
 
-# Now let's find the the normalized consumption of the example building
+fig2=  plt.figure()
+ax = fig2.add_axes()
 
-DF_Office_Ellie_normalized = get_individual_data(DF_temp_normalized,DF_meta,"Office_Ellie")
-DF_Office_Ellie_normalized_period = DF_Office_Ellie_normalized.truncate(before=period_start,after=period_end)
-
-
-
-
-
-# Obtaining the temporal features
-DF_temp_normalized_daily =  DF_temp_normalized.resample("D").sum()
-DF_temp_normalized_daily.head()
-
-# Let's see the normalized daily consumption of our example building
-DF_temp_normalized_daily_example = DF_temp_normalized_daily[exampleBuilding]
-# Let's visualise it
-plt.close("all")
-fig=  plt.figure()
-ax1 = fig.add_axes()
-
-DF_temp_normalized_daily.plot(ax=ax1)
+ax = ExtractedData_chosenBuilding_daily.plot()
 ax.set_xlabel("Time")
-ax.set_ylabel("Consumption (kWh) of "+exampleBuilding)
-ax.set_title("Consumption of "+exampleBuilding)
-
-
-DF_temp_normalized_stats_transposed= DF_temp_normalized_daily.describe().T 
-DF_temp_normalized_stats_transposed
-
-
-DF_temp_normalized_mainStats_transposed = DF_temp_normalized_stats_transposed[["mean","std","min","max"]]
-
-NewNames_for_staticsColumns = ["BGNormalizedCons_mean","BGNormalizedCons_std","BGNormalizedCons_max","BGNormalizedCons_min"]
-
-DF_temp_normalized_mainStats_transposed.columns = NewNames_for_staticsColumns
-
-DF_temp_normalized_mainStats_transposed.index.name = "building_name"
-DF_temp_normalized_mainStats_transposed.columns.name = "feature_name"
-
-allBuildings_daily_temporal_features = DF_temp_normalized_mainStats_transposed
+ax.set_ylabel("Consumption (kWh) of "+chosenBuilding)
+ax.set_title("Consumption of "+chosenBuilding)
