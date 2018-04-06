@@ -143,3 +143,9 @@ ax = ExtractedData_chosenBuilding_daily.plot()
 ax.set_xlabel("Time")
 ax.set_ylabel("Consumption (kWh) of "+chosenBuilding)
 ax.set_title("Consumption of "+chosenBuilding)
+
+# Let's create a more sophisticated visualisation
+fig = plt.figure()
+# we are going to show multiple plots under each other with the same time index it is  useful to hide the dates for the
+# top plot and only keep it for the one in the lowest position
+fig.autofmt_xdate()
