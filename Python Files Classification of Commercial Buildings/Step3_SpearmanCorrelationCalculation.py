@@ -2,6 +2,7 @@ import getpass
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
+from scipy import stats
 
 userName = getpass.getuser() # this line checks for the username and chooses the corresponding directory accordingly
 if userName=="behzad":
@@ -66,7 +67,21 @@ DF_outdoorTemp_dailyAverage = pd.DataFrame(outdoor_temp_dailyAverage);
 ConsumptionData_chosenBuilding_dailySum = ExtractedData_chosenBuilding.resample("D").sum()
 # Next we remove the timezone
 ConsumptionData_chosenBuilding_dailySum=ConsumptionData_chosenBuilding_dailySum.tz_localize(None)
-
+# Nextt we convert this Serie into a dataframe
+DF_ConsumptionData_chosenBuilding_dailySum= pd.DataFrame(ConsumptionData_chosenBuilding_dailySum)
 # we should now merge these two dataframes based on the index(dates) of the building consumption DF
 # so as merge arguments we should choose left_index=True, right_index=True so that it would take into account 
 #both indices then to choose the index tobe retained we would choose how ="left" which would only keep the indices included in the left DF which is building consumption
+tempeCons_combined = pd.merge(DF_ConsumptionData_chosenBuilding_dailySum, DF_outdoorTemp_dailyAverage, right_index=True, left_index=True, how='left')
+
+# Next we groupby the combined dataframe by th eyear and the month
+tempCons_combined_grouppedbyMonth = tempeCons_combined.groupby([lambda date: date.year, lambda date: date.month])
+
+# now let's see the groups that we have:
+print tempCons_combined_grouppedbyMonth.groups
+#  we observe that we hav 12 groups each corresponding to a month in 2012.
+
+# Next we find the spearman r correlation of the grouppedby dataframe
+# the syntax of spearmann r is : R_value, P_value= stats.spearmanr(x,y) , so we can choose index [0] of its results to receive the pearsonr value
+# for the x we can use .iloc[:,0] which is the column of consumptions, and .iloc[:,1] which is the column of temperatures
+pearsonr_tempCons_combined_grouppedbyMonth = tempCons_combined_grouppedbyMonth.apply(lambda x: stats.spearmanr(x.iloc[:,0] , x.iloc[:,1])[0]) # remmeber to import the stats from scipy package
