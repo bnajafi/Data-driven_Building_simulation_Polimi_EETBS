@@ -82,6 +82,21 @@ print tempCons_combined_grouppedbyMonth.groups
 #  we observe that we hav 12 groups each corresponding to a month in 2012.
 
 # Next we find the spearman r correlation of the grouppedby dataframe
-# the syntax of spearmann r is : R_value, P_value= stats.spearmanr(x,y) , so we can choose index [0] of its results to receive the pearsonr value
+# the syntax of spearmann r is : R_value, P_value= stats.spearmanr(x,y) , so we can choose index [0] of its results to receive the spearman value
 # for the x we can use .iloc[:,0] which is the column of consumptions, and .iloc[:,1] which is the column of temperatures
-pearsonr_tempCons_combined_grouppedbyMonth = tempCons_combined_grouppedbyMonth.apply(lambda x: stats.spearmanr(x.iloc[:,0] , x.iloc[:,1])[0]) # remmeber to import the stats from scipy package
+spearmanr_tempCons_eachMonth = tempCons_combined_grouppedbyMonth.apply(lambda x: stats.spearmanr(x.iloc[:,0] , x.iloc[:,1])[0]) # remmeber to import the stats from scipy package
+
+# let's reset the index so that we would create a unique one 
+spearmanr_tempCons_eachMonth = spearmanr_tempCons_eachMonth.reset_index() # it converts the index into two normal columns ,level_0 is the year and level_q is the month
+#Let's create a better shaped index with these two columns
+New_index_stringColumn = (spearmanr_tempCons_eachMonth.level_0*100+spearmanr_tempCons_eachMonth.level_1).apply(str)
+# next indicating that the format is %Y%M we conveer this string colum to datetime
+new_index_datetime = pd.to_datetime(New_index_stringColumn,format="%Y%m")
+
+# let's next change the index to this new index
+spearmanr_tempCons_eachMonth.index= new_index_datetime
+
+# Next let's resampel daily and fill in between
+spearmanr_tempCons_eachMonth_filledDaily=spearmanr_tempCons_eachMonth.resample("D").ffill() # this gives the same value to all days of each month
+# Next let's add ythe column 0 which is the only useful one in a dataframe as a column and name that column as the name of the building 
+spearmanr_building = pd.DataFrame({chosenBuilding:spearmanr_tempCons_eachMonth_filledDaily[0]})
