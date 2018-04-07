@@ -60,3 +60,13 @@ outdoor_temp_dailyAverage = outdoor_temp_dailyAverage.tz_localize(None)
 
 # Let's convert it to a dataFrame
 DF_outdoorTemp_dailyAverage = pd.DataFrame(outdoor_temp_dailyAverage);
+
+
+# we apply the same formatting to the consumption data
+ConsumptionData_chosenBuilding_dailySum = ExtractedData_chosenBuilding.resample("D").sum()
+# Next we remove the timezone
+ConsumptionData_chosenBuilding_dailySum=ConsumptionData_chosenBuilding_dailySum.tz_localize(None)
+
+# we should now merge these two dataframes based on the index(dates) of the building consumption DF
+# so as merge arguments we should choose left_index=True, right_index=True so that it would take into account 
+#both indices then to choose the index tobe retained we would choose how ="left" which would only keep the indices included in the left DF which is building consumption
