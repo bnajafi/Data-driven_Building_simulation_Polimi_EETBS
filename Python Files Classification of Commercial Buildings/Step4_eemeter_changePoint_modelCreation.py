@@ -1,13 +1,14 @@
+# -*- coding: utf-8 -*-
 # in order to utilize this file, you should install version 0.3.2 iof eemeter using the following command
 #pip install eemeter==0.3.2
 # if you are using canopy, you should do so in the canopy command prompt. found in tools menu
-
+import timeit
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import getpass
-import os
-
+import seaborn as sns
+import os 
 
 
 import eemeter
@@ -229,5 +230,111 @@ plt.scatter(df_m.TempC, df_m[testbuilding], color='b')
 plt.scatter(df_m.TempC, df_m.model_Consumption, color='g')
 plt.ylabel("Electrical Consumption [kWh]")
 plt.xlabel("Outdoor Air Dry Bulb Temp [Deg C]")
-plt.savefig(os.path.join(repos_path,"reports/figures/eemeter/changepointscatter_example.png"))
+#plt.savefig(os.path.join(repos_path,"reports/figures/eemeter/changepointscatter_example.png"))
 plt.show()
+
+df_par
+
+
+
+def runeemetermodel(meta, temp, building, model):
+    
+    timezone = meta.T[building].timezone
+    start = meta.T[building].datastart
+    end = meta.T[building].dataend
+    building_data = pd.DataFrame(temp[building].tz_convert(timezone).truncate(before=start,after=end))
+    weatherDataSet_directory = "C:/Users/behzad/Dropbox/3 Research Projects/2 Data for Building/BuildingDataGenomeProject/the-building-data-genome-project/data/external/weather/"
+    weatherfilename = meta.T[building].newweatherfilename
+    weatherfile_path = weatherDataSet_directory+weatherfilename
+    weather = pd.read_csv(weatherfile_path,index_col='timestamp', parse_dates=True, na_values='-9999')
+    weather = weather.tz_localize(timezone, ambiguous = 'infer')
+    
+    weatherdata = CustomDailyWeatherSource2(weather)
+   # df_t = pd.Series(weatherdata.data)
+    df_t = pd.Series(weatherdata.tempC)
+    df_t.index = df_t.index.to_datetime()
+    df_t = pd.DataFrame(df_t)
+    
+    df_t.columns = ["TempC"]
+
+    to_load = building_data.resample('D').sum().tz_localize(None)
+    to_load.columns = ['Consumption']
+    to_load['StartDateTime'] = to_load.index.format('%Y-%m-%d %H:%M:%S.%f')[1:]
+    end=to_load.index+timedelta(days=1)
+    to_load['EndDateTime'] = end.format('%Y-%m-%d %H:%M:%S.%f')[1:]
+    to_load['UnitofMeasure'] = 'kWh'
+    to_load['FuelType'] = 'electricity'
+    to_load['ReadingType'] = 'actual'
+    to_load = to_load.reset_index(drop=True)
+    consumptions = import_pandas(to_load)
+    
+    param_optimization_meter = TemperatureSensitivityParameterOptimizationMeter("degC",model)
+    annualized_usage_meter = AnnualizedUsageMeter("degC",model)
+    params = param_optimization_meter.evaluate_raw(
+                        consumption_data=consumptions,
+                        weather_source=weatherdata,
+                        energy_unit_str="kWh")["temp_sensitivity_params"]
+
+    names1 = ['Baseload', 'HeatBalPtF', 'HeatSlope','CoolBalPtF','CoolSlope']
+    df_par = pd.DataFrame(params.to_list())
+    df_par['Parameter'] = index=names1
+    df_par.columns = ['Value', 'Parameter']
+    df_par = df_par.set_index('Parameter')
+    
+    df_m = building_data.resample('D').sum().tz_localize(None).join(df_t.resample('1D').mean(), how='inner')
+    params_list = params.to_list()
+
+    df_m['model_Consumption'] = params_list[0] + params_list[2]*(np.where(df_m.TempC<params_list[1], params_list[1]-df_m.TempC, 0)) + params_list[4]*(np.where(df_m.TempC>params_list[3], df_m.TempC - params_list[3], 0))
+    df_m['modelbase'] = params_list[0]
+    df_m['modelheating'] = params_list[2]*(np.where(df_m.TempC<params_list[1], params_list[1]-df_m.TempC, np.nan))
+    df_m['modelcooling'] = params_list[4]*(np.where(df_m.TempC>params_list[3], df_m.TempC - params_list[3], np.nan))
+    
+    df_par.loc['totalNMBE'] = 100*((df_m[building] - df_m.model_Consumption).sum()/((df_m[building].count()-1) * df_m[building].mean()))
+    df_par.loc['totalCVRMSE'] = 100*((((df_m[building] - df_m.model_Consumption)**2).sum()/(df_m[building].count()-1))**(0.5))/df_m[building].mean()
+    
+    return df_m, df_par
+    
+building = "PrimClass_Everett"
+df_m, df_par = runeemetermodel(DF_metaData, DF_temporalData, building, model)
+df_m.head()
+df_par
+
+sns.set_style('whitegrid')
+plt.figure(figsize=(15,5))
+plt.scatter(df_m.TempC, df_m[building], color='b')
+plt.scatter(df_m.TempC, df_m.model_Consumption, color='g')
+plt.ylabel("Electrical Consumption [kWh]")
+plt.xlabel("Outdoor Air Dry Bulb Temp [Deg C]")
+#plt.savefig(os.path.join(repos_path,"reports/figures/eemeter/changepointscatter_example.png"))
+plt.show()
+
+
+
+buildinglist = list(DF_metaData.index)
+
+# for all buildings
+temp_modelconsumption = pd.DataFrame()
+temp_modelheating = pd.DataFrame()
+temp_modelcooling = pd.DataFrame()
+features_eemeter = pd.DataFrame()
+
+overall_start_time = timeit.default_timer()
+for building in buildinglist:
+    start_time = timeit.default_timer()
+    try:
+        df_m, df_par = runeemetermodel(DF_metaData, DF_temporalData, building, model)
+    except:
+        print "Couldn't model: "+building
+        
+    temp_modelconsumption = pd.merge(temp_modelconsumption, pd.DataFrame({building:df_m["model_Consumption"]}), right_index=True, left_index=True, how='outer')
+    temp_modelheating = pd.merge(temp_modelheating, pd.DataFrame({building:df_m["modelheating"]}), right_index=True, left_index=True, how='outer')
+    temp_modelcooling = pd.merge(temp_modelcooling, pd.DataFrame({building:df_m["modelcooling"]}), right_index=True, left_index=True, how='outer')
+    features_eemeter = pd.merge(features_eemeter, pd.DataFrame({building:df_par["Value"]}), right_index=True, left_index=True, how='outer')
+    
+    print "Calculated: "+building+" in "+str(timeit.default_timer() - start_time)+" seconds"
+
+print "Calculated all building in "+str(timeit.default_timer() - overall_start_time)+" seconds"
+
+temp_modelconsumption.info()
+temp_modelheating.info()
+
