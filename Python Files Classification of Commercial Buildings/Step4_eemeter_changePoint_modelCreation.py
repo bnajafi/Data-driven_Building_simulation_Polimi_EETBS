@@ -337,4 +337,33 @@ print "Calculated all building in "+str(timeit.default_timer() - overall_start_t
 
 temp_modelconsumption.info()
 temp_modelheating.info()
+temp_modelcooling.info()
+
+features_eemeter.info()
+
+folder_processedData =  r"C:\Users\behzad\Dropbox\3 Research Projects\2 Data for Building\BuildingDataGenomeProject\the-building-data-genome-project\ProcessesData"
+
+temp_modelconsumption.to_csv(os.path.join(folder_processedData,"temp_eemeter_predictedtotal.csv"))
+temp_modelheating.to_csv(os.path.join(folder_processedData,"temp_eemeter_predictedheating.csv"))
+temp_modelcooling.to_csv(os.path.join(folder_processedData,"temp_eemeter_predictedcooling.csv"))
+features_eemeter.to_csv(os.path.join(folder_processedData,"features_eemeter.csv"))
+
+
+temp_modelheating = pd.read_csv(os.path.join(folder_processedData,"temp_eemeter_predictedheating.csv"), index_col='timestamp')
+temp_modelcooling = pd.read_csv(os.path.join(folder_processedData,"temp_eemeter_predictedcooling.csv"), index_col='timestamp')
+
+temp_modelheating/DF_metaData.sqm
+temp_modelheating_normalized= temp_modelheating/DF_metaData.sqm
+temp_modelcooling_normalized = temp_modelcooling/DF_metaData.sqm
+
+
+temp_modelheating_normalized_stats= temp_modelheating_normalized.describe().T
+temp_modelcooling_normalized_stats = temp_modelcooling_normalized.describe().T
+
+temp_modelheating_normalized_stats= temp_modelheating_normalized_stats [['mean','std','min','max']]
+temp_modelcooling_normalized_stats= temp_modelcooling_normalized_stats[['mean','std','min','max']]
+temp_modelheating_normalized_stats.columns = ['BG_eemeter_heating_mean','BG_eemeter_heating_std','BG_eemeter_heating_min','BG_eemeter_heating_max']
+
+temp_modelcooling_normalized_stats.columns = ['BG_eemeter_cooling_mean','BG_eemeter_cooling_std','BG_eemeter_cooling_min','BG_eemeter_cooling_max']
+
 
