@@ -54,8 +54,9 @@ data = building_data.reset_index(drop=True)
 
 processedDataFolder  = r"C:\Users\behzad\Dropbox\3 Research Projects\2 Data for Building\BuildingDataGenomeProject\the-building-data-genome-project\ProcessesData"
 individualBuildingFolderName = "individualBuildings"
-building+".csv"
-savedFile_path = os.path.join(processedData_repo,name)
+individualBuildingFolderPath= os.path.join(processedDataFolder,individualBuildingFolderName)
+BuildingFileName= building+".csv"
+savedFile_path = os.path.join(individualBuildingFolderPath,BuildingFileName)
 data.to_csv(savedFile_path)
 
 # Now let's read the locations
