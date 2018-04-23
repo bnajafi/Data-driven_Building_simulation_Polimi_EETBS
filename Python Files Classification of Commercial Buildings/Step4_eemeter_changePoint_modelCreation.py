@@ -362,8 +362,9 @@ temp_modelcooling_normalized_stats = temp_modelcooling_normalized.describe().T
 
 temp_modelheating_normalized_stats= temp_modelheating_normalized_stats [['mean','std','min','max']]
 temp_modelcooling_normalized_stats= temp_modelcooling_normalized_stats[['mean','std','min','max']]
-temp_modelheating_normalized_stats.columns = ['BG_eemeter_heating_mean','BG_eemeter_heating_std','BG_eemeter_heating_min','BG_eemeter_heating_max']
 
+temp_modelheating_normalized_stats.columns = ['BG_eemeter_heating_mean','BG_eemeter_heating_std','BG_eemeter_heating_min','BG_eemeter_heating_max']
 temp_modelcooling_normalized_stats.columns = ['BG_eemeter_cooling_mean','BG_eemeter_cooling_std','BG_eemeter_cooling_min','BG_eemeter_cooling_max']
 
-
+features_eemeter_imported = pd.read_csv(os.path.join(folder_processedData,"features_eemeter.csv"), index_col=0)
+features_eemeter2 = pd.concat([features_eemeter_imported.T,temp_modelcooling_normalized_stats,temp_modelcooling_normalized_stats],axis=1)
