@@ -26,39 +26,30 @@ path_metaData =  os.path.join(Genomic_DataSet_directory,metaDataFileName)
 DF_temporalData = pd.read_csv(path_temporalData,index_col="timestamp", parse_dates=True).tz_localize("utc")
 DF_metaData = pd.read_csv(path_metaData,index_col = "uid", parse_dates=["datastart","dataend"], dayfirst=True) 
 
-#Let's paste the function we created in the previous step
-
-def extract_building_data(DF_temporalData, DF_metaData, chosenBuilding):
-    DF_metaData_transposed = DF_metaData.T
-    Series_metaData_chosenBuilding = DF_metaData_transposed[chosenBuilding]
-    startDate_chosenBuilding = Series_metaData_chosenBuilding["datastart"]
-    endDate_chosenBuilding = Series_metaData_chosenBuilding["dataend"]
-    timeZone_chosenBuilding = Series_metaData_chosenBuilding["timezone"]
-    Series_temporalData_chosenBuilding  = DF_temporalData[chosenBuilding]
-    Series_temporalData_chosenBuilding_timeZoneConverted =  Series_temporalData_chosenBuilding.tz_convert(timeZone_chosenBuilding)
-    measuredData_chosenBuilding = Series_temporalData_chosenBuilding_timeZoneConverted.truncate(before=startDate_chosenBuilding,after=endDate_chosenBuilding)
-    return measuredData_chosenBuilding
-    
-
-# In this step, we would like to find the spearman correaltion between the weather condition and the consumption of the building 
-
-# so the first task is to extract the weather condiiton corresponding to the  city and timestamp corresponding to each building, the external 
-# data folder includes the weather data and the name of the weather data corresponding to each building is given in the meta data file.
-    
-#building = "UnivDorm_Cooper"
-building = "Office_Ellie"
-timezone = DF_metaData.T[building].timezone
-start = DF_metaData.T[building].datastart
-end = DF_metaData.T[building].dataend
-building_data = DF_temporalData[building].tz_convert(timezone).truncate(before=start,after=end).resample('D').sum()
-data = building_data.reset_index(drop=True)
-
+# Processes Data Folders
 processedDataFolder  = r"C:\Users\behzad\Dropbox\3 Research Projects\2 Data for Building\BuildingDataGenomeProject\the-building-data-genome-project\ProcessesData"
 individualBuildingFolderName = "individualBuildings"
 individualBuildingFolderPath= os.path.join(processedDataFolder,individualBuildingFolderName)
-BuildingFileName= building+".csv"
-savedFile_path = os.path.join(individualBuildingFolderPath,BuildingFileName)
-data.to_csv(savedFile_path)
+ListOfExistingFiles=  os.listdir(individualBuildingFolderPath)
+
+breakouts = pd.DataFrame()
+for building in DF_metaData.index:
+    print building 
+    timezone = DF_metaData.T[building].timezone
+    start = DF_metaData.T[building].datastart
+    end = DF_metaData.T[building].dataend
+    building_data = DF_temporalData[building].tz_convert(timezone).truncate(before=start,after=end).resample('D').sum()
+    data = building_data.reset_index(drop=True)
+    BuildingFileName= building+".csv"
+    if BuildingFileName in ListOfExistingFiles:
+        print "This File Already Exists"
+    else:
+        savedFile_path = os.path.join(individualBuildingFolderPath,BuildingFileName)
+        data.to_csv(savedFile_path)
+
+
+
+
 
 # Now let's read the locations
 name_locations_building = "Locations_"+building+".csv"
