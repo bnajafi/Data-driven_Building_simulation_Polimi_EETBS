@@ -134,6 +134,12 @@ def lag_feature(df,column_name,lag_start,lag_end,lag_interval):
     return df
 
 
+
+# Let's do the same for the irradiance and consumption
+# but I don't like the names of irradiance and consumption columns
+
+# For renaming the column names , you have two ways
+
 #DF_mod.columns =["AC_consumption","temperature","irradiance"]
 # The second way of doing this:
 DF_mod=DF_mod.rename(columns={"air conditioner_5545":"AC_consumption","gen":"irradiance"})
@@ -148,14 +154,41 @@ DF_mod=  lag_feature(DF_mod,"AC_consumption",1,24,1)
 DF_mod.head()
 DF_mod.describe()
 
+# Now let's add the seasonality parameters (time-related parameters)
 
-# Let's do the same for the irradiance and consumption
-# but I don't like the names of irradiance and consumption columns
+DF_mod["hour"]=DF_mod.index.hour
+DF_mod["hour"].head()
+DF_mod["sin_hour"]=np.sin(DF_mod.index.hour*2*np.pi/24)
+DF_mod["cos_hour"]=np.cos(DF_mod.index.hour*2*np.pi/24)
 
-# For renaming the column names , you have two ways
+DF_mod["day_of_week"]=DF_mod.index.dayofweek
+DF_mod[["hour","sin_hour","cos_hour","day_of_week"]].head(24)
 
+DF_mod["month"]=DF_mod.index.month
 
+DF_mod["week_of_year"]=DF_mod.index.week
 
+def WeekendDetector(day):
+    if (day==5 or day == 6):
+        weekendLabel=1
+    else:
+        weekendLabel=0
+    return weekendLabel
+4
+DF_mod["weekend"]= DF_mod["day_of_week"].apply(WeekendDetector)
+    
+def DayDetector(hour):
+    if (hour< 19 and hour>=9):
+        DayLabel=1
+    else:
+        DayLabel=0
+    return DayLabel
 
+DF_mod["workingTime"] = DF_mod["hour"].apply(DayDetector)
 
+DF_mod[["workingTime","weekend"]].head(24)
 
+DF_mod.head()
+DF_mod.columns
+
+DF_mod.corr()
