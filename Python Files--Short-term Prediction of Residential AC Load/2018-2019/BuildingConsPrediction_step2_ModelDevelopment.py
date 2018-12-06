@@ -260,7 +260,7 @@ R2_RF_CV = r2_score(predict_RF_CV,DF_target)
 
 #• What if we want to use online learning
 DF_onlineConsumptionPrediction = pd.DataFrame(index=DF_mod.index)
-period_of_training = pd.Timedelta(10, unit="d")
+period_of_training = pd.Timedelta(30, unit="d")
 
 FirstTimeStamp_measured = DF_mod.index[0]
 LastTimeStamp_measured = DF_mod.index[-1]
@@ -269,34 +269,60 @@ FirstTimeStamp_toPredict= FirstTimeStamp_measured+period_of_training
 
 training_startTimeStamp=FirstTimeStamp_measured
 training_endTimeStamp=FirstTimeStamp_toPredict # it is called end because it will include this time stamp !!
-
-TimeStamp_toPredict=FirstTimeStamp_toPredict
-while TimeStamp_toPredict<LastTimeStamp_measured:
- 
-    #print("time Stamp to be predicted is:")
-    #print (TimeStamp_toPredict) 
-    DF_features_train = DF_features.truncate(before=training_startTimeStamp,after= training_endTimeStamp)
-    DF_target_train = DF_target.truncate(before=training_startTimeStamp,after= training_endTimeStamp)
- 
-    DF_features_test = DF_features.loc[TimeStamp_toPredict].values.reshape(1,-1)
-    DF_target_test = DF_target.loc[TimeStamp_toPredict]
-        
-    reg_RF.fit(DF_features_train, DF_target_train)
-    predicted_consumption= reg_RF.predict(DF_features_test)  
-    DF_OnlineConsumptionPrediction.loc[TimeStamp_toPredict,"Real"] =DF_target_test
-    DF_OnlineConsumptionPrediction.loc[TimeStamp_toPredict,"Predicted"] =predicted_consumption
+timeStamp_toPredict= FirstTimeStamp_toPredict
+DF_onlineConsumptionPrediction=DF_onlineConsumptionPrediction.truncate(before=training_endTimeStamp)
+while (timeStamp_toPredict< LastTimeStamp_measured):
+    #print timeStamp_toPredict
+    #DF_feature_train=DF_features.loc[training_startTimeStamp:training_endTimeStamp]
+    DF_feature_train=DF_features.truncate(before=training_startTimeStamp,after=training_endTimeStamp)
+    DF_target_train= DF_target.truncate(before=training_startTimeStamp,after=training_endTimeStamp)
+    
+    DF_feature_test = DF_features.loc[timeStamp_toPredict].values.reshape(1,-1) # If you dont add this it gives you an error, because you can not have a single line feature
+    DF_target_test=DF_target.loc[timeStamp_toPredict]
+    reg_RF.fit(DF_feature_train,DF_target_train) # Here I am just training with my training data
+    predicted_Consumption = linear_reg.predict(DF_feature_test)
+    DF_onlineConsumptionPrediction.loc[timeStamp_toPredict,"Predicted"]=predicted_Consumption
+    DF_onlineConsumptionPrediction.loc[timeStamp_toPredict,"Real"] = DF_target_test
 
     
-    TimeStamp_toPredict=TimeStamp_toPredict+pd.Timedelta(1,"h")
-    training_endTimeStamp=training_endTimeStamp+pd.Timedelta(1,"h")
-    training_startTimeStamp=training_startTimeStamp+pd.Timedelta(1,"h")
+    timeStamp_toPredict=timeStamp_toPredict+pd.Timedelta(1, unit="h")
+    training_endTimeStamp=training_endTimeStamp+pd.Timedelta(1, unit="h")
+    training_startTimeStamp=training_startTimeStamp + pd.Timedelta(1, unit="h")
 
-DF_features_test
+DF_onlineConsumptionPrediction.dropna(inplace=True)
+
+R2_score_online_linearReg = r2_score(DF_onlineConsumptionPrediction[["Real"]],
+                                     DF_onlineConsumptionPrediction[["Predicted"]])
+    
 
 
-DF_OnlineConsumptionPrediction.dropna(inplace=True)
-R2_score_linearReg_CV = r2_score(DF_OnlineConsumptionPrediction[["Real"]],DF_OnlineConsumptionPrediction[["Predicted"]])
-DF_OnlineConsumptionPrediction.plot()
+FirstTimeStamp_toPredict= FirstTimeStamp_measured+period_of_training
 
-DF_OnlineConsumptionPrediction_august=DF_OnlineConsumptionPrediction["2014-08-01":"2014-08-31"]
-DF_OnlineConsumptionPrediction_august.plot()
+training_startTimeStamp=FirstTimeStamp_measured
+training_endTimeStamp=FirstTimeStamp_toPredict # it is called end because it will include this time stamp !!
+timeStamp_toPredict= FirstTimeStamp_toPredict
+DF_onlineConsumptionPrediction=DF_onlineConsumptionPrediction.truncate(before=training_endTimeStamp)
+while (timeStamp_toPredict< LastTimeStamp_measured):
+    #print timeStamp_toPredict
+    #DF_feature_train=DF_features.loc[training_startTimeStamp:training_endTimeStamp]
+    DF_feature_train=DF_features.truncate(before=training_startTimeStamp,after=training_endTimeStamp-)
+    DF_target_train= DF_target.truncate(before=training_startTimeStamp,after=training_endTimeStamp)
+    
+    DF_feature_test = DF_features.loc[timeStamp_toPredict].values.reshape(1,-1) # If you dont add this it gives you an error, because you can not have a single line feature
+    DF_target_test=DF_target.loc[timeStamp_toPredict]
+    reg_RF.fit(DF_feature_train,DF_target_train) # Here I am just training with my training data
+    predicted_Consumption = reg_RF.predict(DF_feature_test)
+    DF_onlineConsumptionPrediction.loc[timeStamp_toPredict,"Predicted"]=predicted_Consumption
+    DF_onlineConsumptionPrediction.loc[timeStamp_toPredict,"Real"] = DF_target_test
+
+    
+    timeStamp_toPredict=timeStamp_toPredict+pd.Timedelta(1, unit="h")
+    training_endTimeStamp=training_endTimeStamp+pd.Timedelta(1, unit="h")
+    training_startTimeStamp=training_startTimeStamp + pd.Timedelta(1, unit="h")
+
+DF_onlineConsumptionPrediction.dropna(inplace=True)
+
+R2_score_online_RF = r2_score(DF_onlineConsumptionPrediction[["Real"]],
+                                     DF_onlineConsumptionPrediction[["Predicted"]])
+ 
+    
